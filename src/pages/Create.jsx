@@ -1,60 +1,67 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { nanoid } from 'nanoid';
-// import {toast} from "react-toastify" // Uncomment if using toast notifications
-
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { nanoid } from "nanoid";
+import { toast } from "react-toastify"; // Uncomment if using toast notifications
+import {Context} from "../context/ProductContext";
+import { useContext } from "react";
 const CreateProduct = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   // Custom theme colors for easy reference
-  const PRIMARY_BG = 'bg-[#ECE6B4]';
-  const ACCENT_COLOR = 'text-[#304F2F]';
-  const BUTTON_COLOR = 'bg-[#304F2F]';
+  const PRIMARY_BG = "bg-[#ECE6B4]";
+  const ACCENT_COLOR = "text-[#304F2F]";
+  const BUTTON_COLOR = "bg-[#304F2F]";
 
-  const onSubmit = data => {
-    // 1. Assign a unique ID
-    data.id = nanoid();
-    
-    // 2. Convert price to a number (inventory is now removed)
-    data.price = parseFloat(data.price);
-    
-    // Note: data.inventory removal is handled implicitly by not registering the field.
+  const { data, setData } = useContext(Context);
 
-    console.log("New Product Data:", data);
+  
 
-    // 3. (Optional) Save to global state or API here
-    // Example: dispatch(addProduct(data));
+  const onSubmit = (prod) => {
+    prod.id = nanoid();
 
-    // 4. Show success message (if using toast)
-    // toast.success("Product created successfully!");
+    prod.price = parseFloat(prod.price);
 
-    // 5. Reset the form fields
+    const copydata = [...data];
+    copydata.push(prod);
+    setData(copydata);
+
+    console.log("New Product Data:", prod);
+
+    toast.success("Successfully Product Created");
     reset();
 
-    // 6. Navigate back to the previous page or to the product list
-    navigate('/admin/products'); // Consider changing this destination
+    navigate("/product");
   };
 
   return (
-    <div className={`max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-xl ${PRIMARY_BG}`}>
+    <div
+      className={`max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-xl ${PRIMARY_BG}`}
+    >
       <h2 className={`text-3xl font-bold mb-6 text-center ${ACCENT_COLOR}`}>
         Add New Product
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        
         {/* Product Name */}
         <div>
           <input
             type="text"
             placeholder="Product Name (e.g., Artisan Ceramic Mug)"
             className="w-full border p-3 rounded outline-none focus:ring-2 focus:ring-[#304F2F]"
-            {...register("productName", { required: "Product name is required" })}
+            {...register("productName", {
+              required: "Product name is required",
+            })}
           />
           {errors.productName && (
-            <small className="text-red-600 font-medium">{errors.productName.message}</small>
+            <small className="text-red-600 font-medium">
+              {errors.productName.message}
+            </small>
           )}
         </div>
 
@@ -67,7 +74,9 @@ const CreateProduct = () => {
             {...register("imageUrl", { required: "Image URL is required" })}
           />
           {errors.imageUrl && (
-            <small className="text-red-600 font-medium">{errors.imageUrl.message}</small>
+            <small className="text-red-600 font-medium">
+              {errors.imageUrl.message}
+            </small>
           )}
         </div>
 
@@ -79,7 +88,10 @@ const CreateProduct = () => {
             rows="2"
             {...register("shortDescription", {
               required: "Short description is required",
-              maxLength: { value: 150, message: "Maximum 150 characters allowed" }
+              maxLength: {
+                value: 150,
+                message: "Maximum 150 characters allowed",
+              },
             })}
           ></textarea>
           {errors.shortDescription && (
@@ -100,10 +112,12 @@ const CreateProduct = () => {
             })}
           ></textarea>
           {errors.longDescription && (
-            <small className="text-red-600 font-medium">{errors.longDescription.message}</small>
+            <small className="text-red-600 font-medium">
+              {errors.longDescription.message}
+            </small>
           )}
         </div>
-        
+
         {/* Price Field - Now single column */}
         <div>
           <input
@@ -111,34 +125,37 @@ const CreateProduct = () => {
             step="0.01" // Allows for decimal values
             placeholder="Price (₹)"
             className="w-full border p-3 rounded outline-none focus:ring-2 focus:ring-[#304F2F]"
-            {...register("price", { 
+            {...register("price", {
               required: "Price is required",
-              min: { value: 0.01, message: "Price must be greater than 0" }
+              min: { value: 0.01, message: "Price must be greater than 0" },
             })}
           />
           {errors.price && (
-            <small className="text-red-600 font-medium">{errors.price.message}</small>
+            <small className="text-red-600 font-medium">
+              {errors.price.message}
+            </small>
           )}
         </div>
         {/* Inventory field removed */}
 
-
         {/* Category */}
         <div>
-            <select
-              className="w-full border p-3 rounded outline-none focus:ring-2 focus:ring-[#304F2F]"
-              {...register("category", { required: "Please select a category" })}
-            >
-              <option value="">Select Product Category</option>
-              <option value="apparel">Apparel</option>
-              <option value="home_living">Home & Living</option>
-              <option value="wellness">Wellness</option>
-              <option value="accessories">Accessories</option>
-              <option value="limited">Limited Edition</option>
-            </select>
-            {errors.category && (
-              <small className="text-red-600 font-medium">{errors.category.message}</small>
-            )}
+          <select
+            className="w-full border p-3 rounded outline-none focus:ring-2 focus:ring-[#304F2F]"
+            {...register("category", { required: "Please select a category" })}
+          >
+            <option value="">Select Product Category</option>
+            <option value="apparel">Apparel</option>
+            <option value="home_living">Home & Living</option>
+            <option value="wellness">Wellness</option>
+            <option value="accessories">Accessories</option>
+            <option value="limited">Limited Edition</option>
+          </select>
+          {errors.category && (
+            <small className="text-red-600 font-medium">
+              {errors.category.message}
+            </small>
+          )}
         </div>
 
         {/* Submit */}
@@ -151,6 +168,6 @@ const CreateProduct = () => {
       </form>
     </div>
   );
-}
+};
 
 export default CreateProduct;
