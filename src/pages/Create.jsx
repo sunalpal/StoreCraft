@@ -4,6 +4,11 @@ import { nanoid } from "nanoid";
 import { toast } from "react-toastify"; // Uncomment if using toast notifications
 import {Context} from "../context/ProductContext";
 import { useContext } from "react";
+  // Custom theme colors for easy reference
+  const PRIMARY_BG = "bg-[#ECE6B4]";
+  const ACCENT_COLOR = "text-[#304F2F]";
+  const BUTTON_COLOR = "bg-[#304F2F]";
+
 const CreateProduct = () => {
   const navigate = useNavigate();
   const {
@@ -13,10 +18,6 @@ const CreateProduct = () => {
     reset,
   } = useForm();
 
-  // Custom theme colors for easy reference
-  const PRIMARY_BG = "bg-[#ECE6B4]";
-  const ACCENT_COLOR = "text-[#304F2F]";
-  const BUTTON_COLOR = "bg-[#304F2F]";
 
   const { data, setData } = useContext(Context);
 
@@ -32,7 +33,7 @@ const CreateProduct = () => {
     setData(copydata);
 
     localStorage.setItem("product",JSON.stringify(copydata))
-    console.log("New Product Data:", prod);
+    // console.log("New Product Data:", prod);
 
     toast.success("Successfully Product Created");
     reset();

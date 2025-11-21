@@ -3,7 +3,7 @@ import { Context } from "../context/ProductContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
+import { useEffect } from "react";
 const SingleProduct = () => {
   const { data, setData } = useContext(Context);
   const navigate = useNavigate();
@@ -17,7 +17,10 @@ const SingleProduct = () => {
     handleSubmit,
     formState: { errors },
 
-  } = useForm();
+  } = useForm(
+
+
+  );
 
 
   // ---------------- UPDATE ----------------
@@ -67,6 +70,14 @@ const SingleProduct = () => {
     localStorage.setItem("fav", JSON.stringify(filtered));
     toast.success("Removed from favorites");
   };
+
+    useEffect(() => {
+  console.log("single recipe loaded ");
+  return () => {
+    console.log("single recipe unmounted ");  
+  }
+  },[favrite])
+
 
   // ---------------- RETURN ----------------
  return product ? (

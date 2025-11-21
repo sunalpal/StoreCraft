@@ -4,7 +4,7 @@ import Home from "../pages/Home"
 import About from "../pages/About"   
 import Create from "../pages/Create"
 import Product from '../pages/Product'   
-import Fev from '../pages/Fev'
+import Fev from "../pages/Fev"
 import PageNotFound from '../pages/PageNotFound'
 import SingleProduct from '../pages/SingleProduct'
 const MainRoutes = () => {
